@@ -24,6 +24,7 @@ This document records the implemented features and remaining tasks for the Map-B
 * Configured to run automatically every day at 2:00 AM KST (`0 17 * * *` UTC) and supports manual triggering via `workflow_dispatch`.
 * Clones the repository, installs python dependencies, runs `collect_data.py` (injecting `GOOGLE_API_KEY` from Github Secrets), and automatically commits and pushes updated JSON feeds back to the repository if changes are found.
 * This automated commit triggers automatic static hosting redeployments (Netlify/Vercel) on the frontend.
+* **Bug Fix (Permission Error):** Added `permissions: contents: write` block to the workflow configuration to resolve the Git push authentication error (403 Forbidden).
 
 ## Output Assets
 The script generates the following feeds conformant to the data protocol:

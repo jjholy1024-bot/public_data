@@ -11,10 +11,10 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 # Load environment variables
 load_dotenv(dotenv_path="D:\\public_data_pro\\.env")
-api_key = os.getenv("GOOGLE_API_KEY")
+SERVICE_KEY = os.getenv("PUBLIC_DATA_SERVICE_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # Constants
-MOFA_SERVICE_KEY = '5d32cbefc97d315cce1a19bfcb3c347a865e267f29f8123cb37e63480c331ca5'
 GEMINI_MODEL = 'gemini-flash-lite-latest'
 
 # Static lookup table for coordinates
@@ -126,11 +126,11 @@ def load_cache(filepath):
     return cache
 
 def call_gemini_api(raw_title, raw_reg_date, raw_location, raw_organization, raw_content):
-    if not api_key:
+    if not GOOGLE_API_KEY:
         print("GOOGLE_API_KEY environment variable is not set. Cannot call Gemini API.")
         return None
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GOOGLE_API_KEY}"
     prompt = f"""You are an expert recruitment assistant specializing in international organizations.
 Analyze the following job vacancy post and extract structured data.
 
@@ -210,7 +210,7 @@ def process_vacancies():
     print("Fetching Recent Vacancies...")
     general_url = 'http://apis.data.go.kr/1262000/IntrlInsttVacancyInfoService/getRecentVacancyInfoList'
     # Fetch top 100 rows to cover all active general vacancies (usually around 30)
-    general_params = {'serviceKey': MOFA_SERVICE_KEY, 'numOfRows': '100', 'pageNo': '1'}
+    general_params = {'serviceKey': SERVICE_KEY, 'numOfRows': '100', 'pageNo': '1'}
     
     try:
         res = requests.get(general_url, params=general_params)
@@ -225,7 +225,7 @@ def process_vacancies():
     print("Fetching Internship Vacancies...")
     internship_url = 'http://apis.data.go.kr/1262000/IntrlInsttVacancyInfoService/getInternshipVacancyInfoList'
     # Fetch top 50 items (sorted by regDt descending, so they are the most recent ones)
-    internship_params = {'serviceKey': MOFA_SERVICE_KEY, 'numOfRows': '50', 'pageNo': '1', 'title': '인턴십'}
+    internship_params = {'serviceKey': SERVICE_KEY, 'numOfRows': '50', 'pageNo': '1', 'title': '인턴십'}
     
     try:
         res = requests.get(internship_url, params=internship_params)

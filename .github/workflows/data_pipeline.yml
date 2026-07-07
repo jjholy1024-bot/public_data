@@ -30,6 +30,7 @@ jobs:
 
       - name: Run data collection and processing script
         env:
+          PUBLIC_DATA_SERVICE_KEY: ${{ secrets.PUBLIC_DATA_SERVICE_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: python collect_data.py
 
